@@ -1,4 +1,3 @@
-import {emailUpdates} from "../data/updates.js";
 import {getCookie, setCookie} from "../utils.js";
 
 const r = document.querySelector(':root');
