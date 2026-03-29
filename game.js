@@ -1,8 +1,8 @@
-import {emailUpdates} from "./updates.js";
+import {emailUpdates} from "./data/updates.js";
 import {getCookie, setCookie, getLocalDateDay} from "./utils.js";
 
 //VARIABLES--------------------------------------------------------
-let r = document.querySelector(':root');
+const r = document.querySelector(':root');
 let cursor = {x: 0, y: 0}
 
 //variables holding the solution
@@ -10,42 +10,50 @@ let solution = null;
 let solutionNum = null;
 
 //variables relating to user input
-let symbolInput = document.getElementById("guess");
-let symbolSubmit = document.getElementById("guess_submit");
+const symbolInput = document.getElementById("guess");
+const symbolSubmit = document.getElementById("guess_submit");
 
 //the user's guesses
-let totalGuesses = 8;
+const totalGuesses = 8;
 let guesses = 0;
-let guessNumArr = [];
+const guessNumArr = [];
 let daGuessedSymbol = null;
 let daGuessedSymbolNum = null;
-let guessesDiv = document.getElementById("guesses");
+const guessesDiv = document.getElementById("guesses");
 
-let hintsDiv = document.getElementById("hinttitles"); //i wanted to add hints lol
+const hintsDiv = document.getElementById("hinttitles"); //i wanted to add hints lol
 
 //the variables when the game is done
-let winDiv = document.getElementById("won");
-let lostDiv = document.getElementById("lost");
-let daSymbolDiv = document.getElementById("secretSymbol");
-let resultsDiv = document.getElementById("results");
+const winDiv = document.getElementById("won");
+const lostDiv = document.getElementById("lost");
+const daSymbolDiv = document.getElementById("secretSymbol");
+const resultsDiv = document.getElementById("results");
 let gameOver = false;
 let finishEmojis = "";
-let finishEmojisDiv = document.getElementById("finishEmojisDiv");
-let playAgainButton = document.getElementById("playAgainButton");
+const finishEmojisDiv = document.getElementById("finishEmojisDiv");
+const playAgainButton = document.getElementById("playAgainButton");
 
 //variables related to the emails on the left side of the screen
-let emailToggle = document.getElementById("emailToggle");
-let emailToggleLabel = document.getElementById("emailToggleLabel");
-let emailToggleDiv = document.getElementById("emailToggleDiv");
-let emailsDiv = document.getElementById("emails");
-let mainGame = document.getElementById("mainGame");
-let emailCheck = document.getElementById("emailCheck");
+const emailToggle = document.getElementById("emailToggle");
+const emailToggleLabel = document.getElementById("emailToggleLabel");
+const emailToggleDiv = document.getElementById("emailToggleDiv");
+const emailsDiv = document.getElementById("emails");
+const mainGame = document.getElementById("mainGame");
+const emailCheck = document.getElementById("emailCheck");
 let showEmails = false;
 let emailToDelete = null;
-let noEmailsDiv = document.getElementById("noEmails");
+const noEmailsDiv = document.getElementById("noEmails");
+
+function getLastFolder(url, num)
+{
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    const parts = pathname.split('/').filter(part => part !== '').filter(part => part !== 'index.html'); // Split and remove empty elements and index.html
+    return parts[parts.length - num];
+}
 
 //variables for the daily
-let daily = window.location.pathname.split("/").pop() == "daily.html" || window.location.pathname.split("/").pop() == "daily";
+const daily = getLastFolder(window.location.href, 1) == "daily";
 let dailyDone = false;
 let dailyStreak = 0;
 let streakNum = document.getElementById("streakNum");
@@ -85,11 +93,11 @@ let hasSearchedGroup = false;
 
 const EMOJ =
 {
-    CHECK: "./img/confirm.png",
-    DUD: "./img/dud.png",
-    UP: "./img/golden_arrow2.png",
-    DOWN: "./img/bronze_arrow7.png",
-    MISSING: "./img/missing.png"
+    CHECK: "https://monstyrslayr.github.io/lbaldle/img/confirm.png",
+    DUD: "https://monstyrslayr.github.io/lbaldle/img/dud.png",
+    UP: "https://monstyrslayr.github.io/lbaldle/img/golden_arrow2.png",
+    DOWN: "https://monstyrslayr.github.io/lbaldle/img/bronze_arrow7.png",
+    MISSING: "https://monstyrslayr.github.io/lbaldle/img/missing.png"
 }
 
 //CLASSES-------------------------------------------------------------------------
@@ -105,40 +113,40 @@ class Email
         this.body = body;
         this.emailAddress = emailAddress;
 
-        var headerDiv = document.createElement("div");
+        let headerDiv = document.createElement("div");
         headerDiv.classList = ["emailHeader"];
         this.div.append(headerDiv);
 
-        var headerText = document.createElement("h3");
+        let headerText = document.createElement("h3");
         headerText.innerHTML = "Solution due in <span class='guessCount'>" + (totalGuesses - guesses) + "</span> guess" + (totalGuesses - guesses == 1 ? "" : "es");
         headerDiv.append(headerText);
 
-        var notifDiv = document.createElement("div");
+        let notifDiv = document.createElement("div");
         notifDiv.classList = ["emailNotif"];
         this.div.append(notifDiv);
 
-        var daNotif = document.createElement("h3");
+        let daNotif = document.createElement("h3");
         daNotif.innerHTML = title;
         notifDiv.append(daNotif);
 
-        var bodyDiv = document.createElement("div");
+        let bodyDiv = document.createElement("div");
         bodyDiv.classList = ["emailBody"];
         this.div.append(bodyDiv);
 
-        for (var i = 0; i < this.body.length; i++)
+        for (let i = 0; i < this.body.length; i++)
         {
-            var daPar = document.createElement("p");
+            let daPar = document.createElement("p");
             daPar.innerHTML = this.body[i];
             bodyDiv.append(daPar);
         }
 
-        var daAddress = document.createElement("p");
+        let daAddress = document.createElement("p");
         daAddress.innerHTML = this.emailAddress;
         daAddress.classList = ["emailAddress"];
         bodyDiv.append(daAddress);
 
         this.myCheckbox = document.createElement("button");
-        this.myCheckbox.innerHTML = "<img class='emailCheck' src='./img/confirm.png'>";
+        this.myCheckbox.innerHTML = "<img class='emailCheck' src='https://monstyrslayr.github.io/lbaldle/img/confirm.png'>";
         this.myCheckbox.classList = ["emailToggle"];
         this.myCheckbox.closeDiv = this.div;
         bodyDiv.append(this.myCheckbox);
@@ -234,7 +242,7 @@ function newGame()
     setCookie("solutionNum", solutionNum.toString(), 365, daily);
     setCookie("guessNumArr", "", 365, daily)
 
-    var daEmail;
+    let daEmail;
 
     if (daily)
     {
@@ -260,11 +268,11 @@ function setInfoDiv(number, paragraph = "")
         {
             hasHovered = true;
 
-            var daInfoName = document.createElement("h3");
+            let daInfoName = document.createElement("h3");
             daInfoName.innerHTML = symbols[number].name;
             symbolInfoDiv.append(daInfoName);
 
-            var daInfoRarity = document.createElement("h3");
+            let daInfoRarity = document.createElement("h3");
             daInfoRarity.innerHTML = symbols[number].rarity;
             switch (symbols[number].rarity)
             {
@@ -291,7 +299,7 @@ function setInfoDiv(number, paragraph = "")
             }
             symbolInfoDiv.append(daInfoRarity);
 
-            var daInfoPara = document.createElement("p");
+            let daInfoPara = document.createElement("p");
             
             daInfoPara.innerHTML += "Base Coin Payout: " + symbols[number].coin;
 
@@ -307,7 +315,7 @@ function setInfoDiv(number, paragraph = "")
         }
         else
         {
-            var daInfoPara = document.createElement("p");
+            let daInfoPara = document.createElement("p");
             daInfoPara.innerHTML = paragraph;
         }
 
@@ -318,9 +326,9 @@ function setInfoDiv(number, paragraph = "")
 //creates the row using a lbaldle row
 function makeRowDiv(row)
 {
-    var daDiv = document.createElement("div");
+    let daDiv = document.createElement("div");
 
-    var daSymbol = new SymbolElement(row.symbol.image);
+    let daSymbol = new SymbolElement(row.symbol.image);
     daSymbol.daImg = row.symbol.image;
     daSymbol.daNumber = daGuessedSymbolNum;
     daDiv.append(daSymbol);
@@ -336,27 +344,27 @@ function makeRowDiv(row)
         symbolInfoDiv.style.display = "none";
     }
 
-    var daRarity = new SymbolElement(row.rarity);
+    let daRarity = new SymbolElement(row.rarity);
     daRarity.daImg = row.rarity;
     daDiv.append(daRarity);
 
-    var daCount = new SymbolElement(row.coin);
+    let daCount = new SymbolElement(row.coin);
     daCount.daImg = row.coin;
     daDiv.append(daCount);
 
-    var daSymbols = new SymbolElement(row.symbolCount);
+    let daSymbols = new SymbolElement(row.symbolCount);
     daSymbols.daImg = row.symbolCount;
     daDiv.append(daSymbols);
 
-    var daApps = new SymbolElement(row.symbolApp);
+    let daApps = new SymbolElement(row.symbolApp);
     daApps.daImg = row.symbolApp;
     daDiv.append(daApps);
 
-    var daItemApps = new SymbolElement(row.itemApp);
+    let daItemApps = new SymbolElement(row.itemApp);
     daItemApps.daImg = row.itemApp;
     daDiv.append(daItemApps);
 
-    var daPercs = new SymbolElement(row.perc);
+    let daPercs = new SymbolElement(row.perc);
     daPercs.daImg = row.perc;
     daDiv.append(daPercs);
 
@@ -368,14 +376,14 @@ function addGuess()
     guesses++;
 
     //check rarity
-    var elRarity = EMOJ.CHECK;
+    let elRarity = EMOJ.CHECK;
     if (daGuessedSymbol.rarity != solution.rarity)
     {
         elRarity = EMOJ.DUD;
     }
 
     //check coin count
-    var elCount = EMOJ.CHECK;
+    let elCount = EMOJ.CHECK;
     if (daGuessedSymbol.coin > solution.coin)
     {
         elCount = EMOJ.DOWN;
@@ -386,7 +394,7 @@ function addGuess()
     }
 
     //check symbol count
-    var elSymbol = EMOJ.CHECK;
+    let elSymbol = EMOJ.CHECK;
     if (daGuessedSymbol.symbolCount > solution.symbolCount)
     {
         elSymbol = EMOJ.DOWN;
@@ -397,7 +405,7 @@ function addGuess()
     }
 
     //check symbapp count
-    var elApp = EMOJ.CHECK;
+    let elApp = EMOJ.CHECK;
     if (daGuessedSymbol.symbolApp > solution.symbolApp)
     {
         elApp = EMOJ.DOWN;
@@ -408,7 +416,7 @@ function addGuess()
     }
 
     //check itemapp count
-    var elItemApp = EMOJ.CHECK;
+    let elItemApp = EMOJ.CHECK;
     if (daGuessedSymbol.itemApp > solution.itemApp)
     {
         elItemApp = EMOJ.DOWN;
@@ -419,7 +427,7 @@ function addGuess()
     }
 
     //check achievement percentage
-    var elPerc = EMOJ.CHECK;
+    let elPerc = EMOJ.CHECK;
     if (daGuessedSymbol.achievePerc == -1)
     {
         elPerc = EMOJ.MISSING;
@@ -433,7 +441,7 @@ function addGuess()
         elPerc = EMOJ.UP;
     }
 
-    var daNewRow = makeRowDiv(new LbaldleRow(daGuessedSymbol, elRarity, elCount, elSymbol, elApp, elItemApp, elPerc));
+    let daNewRow = makeRowDiv(new LbaldleRow(daGuessedSymbol, elRarity, elCount, elSymbol, elApp, elItemApp, elPerc));
     daNewRow.classList = ["row"];
     guessesDiv.append(daNewRow);
 
@@ -456,8 +464,8 @@ function addGuess()
 function saveGuess(guessNumber)
 {
     guessNumArr.push(guessNumber);
-    var daCookieString = "";
-    for (var i = 0; i < guessNumArr.length; i++)
+    let daCookieString = "";
+    for (let i = 0; i < guessNumArr.length; i++)
     {
         daCookieString += guessNumArr[i] + ",";
     }
@@ -498,13 +506,13 @@ function gameOverFunc()
     //generate a wordle finishing thing whatever it's called ugggg
     //🟩🟨🔽🔼⬛🟥❓❔
 
-    for (var i = 0; i < guessesDiv.childNodes.length; i++)
+    for (let i = 0; i < guessesDiv.childNodes.length; i++)
     {
-        var daRow = guessesDiv.childNodes[i];
+        let daRow = guessesDiv.childNodes[i];
 
-        for (var j = 1; j < daRow.childNodes.length; j++)
+        for (let j = 1; j < daRow.childNodes.length; j++)
         {
-            var daEmoj = daRow.childNodes[j];
+            let daEmoj = daRow.childNodes[j];
 
             switch (daEmoj.daImg)
             {
@@ -551,7 +559,7 @@ function changeDarkMode()
             r.style.setProperty('--light-bg-select', '#333333');
         }
 
-        darkModeToggle.src = "./img/moon.png";
+        darkModeToggle.src = "https://monstyrslayr.github.io/lbaldle/img/moon.png";
     }
     else
     {
@@ -566,7 +574,7 @@ function changeDarkMode()
             r.style.setProperty('--light-bg-select', '#999999');
         }
 
-        darkModeToggle.src = "./img/sun.png";
+        darkModeToggle.src = "https://monstyrslayr.github.io/lbaldle/img/sun.png";
     }
 }
 
@@ -574,15 +582,15 @@ function changeShowInfo()
 {
     if (showInfo == 2)
     {
-        infoCheck.src = "./img/coconut.png";
+        infoCheck.src = "https://monstyrslayr.github.io/lbaldle/img/coconut.png";
     }
     else if (showInfo == 1)
     {
-        infoCheck.src = "./img/coconut_half.png";
+        infoCheck.src = "https://monstyrslayr.github.io/lbaldle/img/coconut_half.png";
     }
     else
     {
-        infoCheck.src = "./img/dud.png";
+        infoCheck.src = "https://monstyrslayr.github.io/lbaldle/img/dud.png";
     }
 }
 
@@ -590,11 +598,11 @@ function changeShowGroups()
 {
     if (showGroups)
     {
-        groupCheck.src = "./img/confirm.png";
+        groupCheck.src = "https://monstyrslayr.github.io/lbaldle/img/confirm.png";
     }
     else
     {
-        groupCheck.src = "./img/dud.png";
+        groupCheck.src = "https://monstyrslayr.github.io/lbaldle/img/dud.png";
     }
 }
 
@@ -628,7 +636,7 @@ function loadDaGame()
         }
         else
         {
-            var loadGame = !daily;
+            let loadGame = !daily;
 
             if (daily)
             {
@@ -653,11 +661,11 @@ function loadDaGame()
                 solutionNum = parseInt(getCookie("solutionNum", daily))
                 solution = symbols[solutionNum];
 
-                var daGuessNumArr = getCookie("guessNumArr", daily).split(",");
+                let daGuessNumArr = getCookie("guessNumArr", daily).split(",");
 
-                for (var i = 0; i < daGuessNumArr.length - 1; i++)
+                for (let i = 0; i < daGuessNumArr.length - 1; i++)
                 {
-                    var daNum = parseInt(daGuessNumArr[i]);
+                    let daNum = parseInt(daGuessNumArr[i]);
 
                     symbolInput.value = symbols[daNum].name;
                     symbolSubmit.onclick();
@@ -666,9 +674,9 @@ function loadDaGame()
         }
     }
 
-    for (var i = 0; i < emailUpdates.length; i++)
+    for (let i = 0; i < emailUpdates.length; i++)
     {
-        var daEmail = new Email(emailUpdates[i].desc, "Monstyr_McMonstyrSlayr@bouncy.mail", emailUpdates[i].updateName);
+        let daEmail = new Email(emailUpdates[i].desc, "Monstyr_McMonstyrSlayr@bouncy.mail", emailUpdates[i].updateName);
         emailsDiv.prepend(daEmail.div);
     }
 }
@@ -760,23 +768,23 @@ emailToggle.onclick = function()
 //and show the image prematurely
 symbolInput.oninput = function()
 {
-    var found = false;
+    let found = false;
     guessPreview.innerHTML = "";
 
     if (showGroups)
     {
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
-            var daDict = dictionaries[i]
+            let daDict = dictionaries[i]
             if (findDictionary(symbolInput.value) == i)
             {
                 hasSearchedGroup = true;
                 found = true;
-                var newPreview = [];
-                for (var j = 0; j < daDict.symbols.length; j++)
+                let newPreview = [];
+                for (let j = 0; j < daDict.symbols.length; j++)
                 {
-                    var daSymbolNum = daDict.symbols[j];
-                    var daSymbol = symbols[daSymbolNum];
+                    let daSymbolNum = daDict.symbols[j];
+                    let daSymbol = symbols[daSymbolNum];
 
                     newPreview[j] = new SymbolElement(daSymbol.image);
                     newPreview[j].symbolNum = daSymbolNum;
@@ -802,12 +810,12 @@ symbolInput.oninput = function()
 
     if (!found)
     {
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
-            var daSymbol = symbols[i];
+            let daSymbol = symbols[i];
             if (findSymbol(symbolInput.value) == i)
             {
-                var newPreview = document.createElement("img");
+                let newPreview = document.createElement("img");
                 newPreview.classList = ["symbol"];
                 newPreview.src = daSymbol.image;
                 newPreview.symbolNum = i;
@@ -927,7 +935,7 @@ symbolSubmit.onclick = function()
             addGuess();
             gameOverFunc();
 
-            var daEmail;
+            let daEmail;
 
             if (daily)
             {
@@ -949,7 +957,7 @@ symbolSubmit.onclick = function()
             //your guess could not be found------------------------------------
             if (daGuessedSymbol == null)
             {
-                var daEmail;
+                let daEmail;
 
                 daEmail = new Email(["This symbol was not found. Try checking your spelling."], "");
 
@@ -962,7 +970,7 @@ symbolSubmit.onclick = function()
                 saveGuess(daGuessedSymbolNum);
                 addGuess();
 
-                var daEmail;
+                let daEmail;
 
                 if (totalGuesses - guesses != 1) daEmail = new Email([(totalGuesses - guesses) + " guesses remaining." + ((!hasHovered && showInfo > 0 && guesses == 3) ? "<br>By the way, did you know that you can hover over symbols to see their data?" : "")  + ((!hasSearchedGroup && showGroups && guesses == 2) ? "<br>Did you know that you can search for specific symbol groups?<br>Try typing \"fruit\", \"human\", or even \"rare\"!" : "")], "");
                 else daEmail = new Email(["1 guess remaining."], "");
@@ -1043,20 +1051,20 @@ $.ajax
 (
     {
         //url: "https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=1404850&format=json",
-        url: "./steamAchievements.json",
+        url: "https://monstyrslayr.github.io/lbaldle/data/steamAchievements.json",
         type: "GET",
     }
 ).done(function(response) 
     {
         achievementsLoaded = true;
         //console.log(response);
-        var daList = response.achievementpercentages.achievements;
+        let daList = response.achievementpercentages.achievements;
 
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
-            var found = false;
+            let found = false;
 
-            for (var j = 0; j < daList.length; j++)
+            for (let j = 0; j < daList.length; j++)
             {
                 if (symbols[i].achieveName == daList[j].name)
                 {
@@ -1076,12 +1084,12 @@ $.ajax
     }
 ).fail(function()
     {
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
             symbols[i].achieveDesc = "We were unable to get the Steam achievement percentages. Try reloading the page, or if the issue persists, contact MonstyrSlayr.";
         }
 
-        var daEmail = new Email(["We were unable to get the Steam achievement percentages. Try reloading the page, or if the issue persists, contact MonstyrSlayr."], "Monstyr_McMonstyrSlayr@bouncy.mail", "Achievement Column Load Error");
+        let daEmail = new Email(["We were unable to get the Steam achievement percentages. Try reloading the page, or if the issue persists, contact MonstyrSlayr."], "Monstyr_McMonstyrSlayr@bouncy.mail", "Achievement Column Load Error");
         emailsDiv.prepend(daEmail.div);
 
         loadDaGame();

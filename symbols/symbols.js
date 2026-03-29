@@ -1,12 +1,12 @@
-import {emailUpdates} from "./updates.js";
-import {getCookie, setCookie} from "./utils.js";
+import {emailUpdates} from "../updates.js";
+import {getCookie, setCookie} from "../utils.js";
 
-let r = document.querySelector(':root');
-let symbolsDiv = document.getElementById("allSymbols");
+const r = document.querySelector(':root');
+const symbolsDiv = document.getElementById("allSymbols");
 let demSymbols = symbols.slice(0);
-let cols = document.getElementsByClassName("column");
+const cols = document.getElementsByClassName("column");
 let isDarkMode = false;
-let darkModeToggle = document.getElementById("darkModeToggle");
+const darkModeToggle = document.getElementById("darkModeToggle");
 
 if (getCookie("darkMode", false) == "")
 {
@@ -15,26 +15,26 @@ if (getCookie("darkMode", false) == "")
 
 function createDivs()
 {
-    for (var i = 0; i < demSymbols.length; i++) {
-        var daSymbol = demSymbols[i];
+    for (let i = 0; i < demSymbols.length; i++) {
+        let daSymbol = demSymbols[i];
 
-        var daRow = document.createElement("div");
+        let daRow = document.createElement("div");
         daRow.classList = ["row"];
         symbolsDiv.append(daRow);
 
-        var daFirst = document.createElement("div");
+        let daFirst = document.createElement("div");
         daFirst.classList = ["column"];
-        var symbolImage = document.createElement("img");
+        let symbolImage = document.createElement("img");
         symbolImage.src = daSymbol.image;
         symbolImage.style.imageRendering = "pixelated";
         daFirst.append(symbolImage);
-        var symbolText = document.createElement("p");
+        let symbolText = document.createElement("p");
         symbolText.innerHTML = daSymbol.name;
         symbolText.classList = ["symbolText"];
         daFirst.append(symbolText);
         daRow.append(daFirst);
 
-        var daRarity = document.createElement("p");
+        let daRarity = document.createElement("p");
         daRarity.classList = ["column"];
         switch (daSymbol.rarity) {
             case RARITY.COMMON:
@@ -60,27 +60,27 @@ function createDivs()
         }
         daRow.append(daRarity);
 
-        var daCoins = document.createElement("p");
+        let daCoins = document.createElement("p");
         daCoins.classList = ["column"];
         daCoins.innerHTML = daSymbol.coin;
         daRow.append(daCoins);
 
-        var daCount = document.createElement("p");
+        let daCount = document.createElement("p");
         daCount.classList = ["column"];
         daCount.innerHTML = daSymbol.symbolCount;
         daRow.append(daCount);
 
-        var daApp = document.createElement("p");
+        let daApp = document.createElement("p");
         daApp.classList = ["column"];
         daApp.innerHTML = daSymbol.symbolApp;
         daRow.append(daApp);
 
-        var daItemApp = document.createElement("p");
+        let daItemApp = document.createElement("p");
         daItemApp.classList = ["column"];
         daItemApp.innerHTML = daSymbol.itemApp;
         daRow.append(daItemApp);
 
-        var daPerc = document.createElement("p");
+        let daPerc = document.createElement("p");
         daPerc.classList = ["column"];
         daPerc.innerHTML = daSymbol.achievePerc + "%";
         daRow.append(daPerc);
@@ -91,9 +91,9 @@ function createDivs()
 
 let repeatCase = 0;
 
-for (var i = 0; i < cols.length; i++)
+for (let i = 0; i < cols.length; i++)
 {
-    var daCol = cols[i];
+    let daCol = cols[i];
     daCol.id = i;
 
     switch (i)
@@ -105,8 +105,8 @@ for (var i = 0; i < cols.length; i++)
                 if (repeatCase == this.id)
                 {
                     demSymbols.sort((b, a) => {
-                        var textA = a.name.toUpperCase();
-                        var textB = b.name.toUpperCase();
+                        let textA = a.name.toUpperCase();
+                        let textB = b.name.toUpperCase();
                         return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
                     });
                 }
@@ -251,14 +251,14 @@ function changeDarkMode()
         r.style.setProperty('--light-bg-color', '#122950');
         r.style.setProperty('--light-bg-select', '#36376a');
 
-        darkModeToggle.src = "./img/moon.png";
+        darkModeToggle.src = "https://monstyrslayr.github.io/lbaldle/img/moon.png";
     }
     else
     {
         r.style.setProperty('--light-bg-color', '#ff8300');
         r.style.setProperty('--light-bg-select', '#ffa320');
 
-        darkModeToggle.src = "./img/sun.png";
+        darkModeToggle.src = "https://monstyrslayr.github.io/lbaldle/img/sun.png";
     }
 }
 
@@ -266,19 +266,19 @@ $.ajax
 (
     {
         //url: "https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid=1404850&format=json",
-        url: "./steamAchievements.json",
+        url: "https://monstyrslayr.github.io/lbaldle/data/steamAchievements.json",
         type: "GET",
     }
 ).done(function(response) 
     {
         //console.log(response);
-        var daList = response.achievementpercentages.achievements;
+        let daList = response.achievementpercentages.achievements;
 
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
-            var found = false;
+            let found = false;
 
-            for (var j = 0; j < daList.length; j++)
+            for (let j = 0; j < daList.length; j++)
             {
                 if (symbols[i].achieveName == daList[j].name)
                 {
@@ -298,7 +298,7 @@ $.ajax
     }
 ).fail(function()
     {
-        for (var i = 0; i < symbols.length; i++)
+        for (let i = 0; i < symbols.length; i++)
         {
             symbols[i].achieveDesc = "We were unable to get the Steam achievement percentages. Try reloading the page, or if the issue persists, contact MonstyrSlayr.";
         }

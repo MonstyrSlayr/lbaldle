@@ -1,4 +1,4 @@
-import {getCookie, setCookie} from "./utils.js";
+import {getCookie, setCookie} from "../utils.js";
 
 class Update
 {
@@ -22,10 +22,10 @@ let updates =
 
 export let emailUpdates = [];
 
-for (var i = 0; i < updates.length; i++)
+for (let i = 0; i < updates.length; i++)
 {
-    var daUpdate = updates[i];
-    var isUpdate = getCookie("update" + daUpdate.updateName.toLowerCase().replace(/\s/g, ''), false);
+    let daUpdate = updates[i];
+    let isUpdate = getCookie("update" + daUpdate.updateName.toLowerCase().replace(/\s/g, ''), false);
 
     if (isUpdate == "")
     {

@@ -8,7 +8,7 @@ class Symbol
         this.symbolCount = symbolCount;
         this.symbolApp = symbolApp;
         this.itemApp = itemApp;
-        this.image = "./img/" + image;
+        this.image = "https://monstyrslayr.github.io/lbaldle/img/" + image;
         this.achieveName = achieveName;
         this.achieveDesc = achieveDesc;
         this.achievePerc = -1;
@@ -25,7 +25,7 @@ const RARITY =
     SPECIAL: 4
 }
 
-symbols =
+const symbols =
 [
     new Symbol("Amethyst", RARITY.RARE, 1, 0, 4, 1, "amethyst.png", "NEW_ACHIEVEMENT_4_12", "Increase an Amethyst's value 20 or more times before rent payment #12 is due."),
     new Symbol("Anchor", RARITY.COMMON, 1, 0, 2, 0, "anchor.png", "NEW_ACHIEVEMENT_2_1", "Have a Diver and Pirate share an Anchor."),
@@ -189,7 +189,7 @@ class Dictionary
     }
 }
 
-dictionaries =
+const dictionaries =
 [
     new Dictionary
     (
@@ -477,16 +477,16 @@ function simplifyString(str)
 //since some symbols can have multiple names, we use this to find them
 function findSymbol(str, returnNumber = true)
 {
-    var daStr = simplifyString(str);
+    let daStr = simplifyString(str);
 
-    for (var i = 0; i < symbols.length; i++)
+    for (let i = 0; i < symbols.length; i++)
     {
         if (daStr == simplifyString(symbols[i].name))
         {
             if (returnNumber) return i; else return symbols[i];
         }
 
-        for (var j = 0; j < symbols[i].altNames.length; j++)
+        for (let j = 0; j < symbols[i].altNames.length; j++)
         {
             if (daStr == simplifyString(symbols[i].altNames[j]))
             {
@@ -501,11 +501,11 @@ function findSymbol(str, returnNumber = true)
 //same for dictionaries
 function findDictionary(str, returnNumber = true)
 {
-    var daStr = simplifyString(str);
+    let daStr = simplifyString(str);
 
-    for (var i = 0; i < dictionaries.length; i++)
+    for (let i = 0; i < dictionaries.length; i++)
     {
-        for (var j = 0; j < dictionaries[i].names.length; j++)
+        for (let j = 0; j < dictionaries[i].names.length; j++)
         {
             if (daStr == simplifyString(dictionaries[i].names[j]))
             {
@@ -520,8 +520,8 @@ function findDictionary(str, returnNumber = true)
 //just for dictionaries
 function returnRarity(rarity)
 {
-    var newArr = []
-    for (var i = 0; i < symbols.length; i++)
+    let newArr = []
+    for (let i = 0; i < symbols.length; i++)
     {
         if (symbols[i].rarity == rarity)
         {

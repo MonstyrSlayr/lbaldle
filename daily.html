@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="./style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
         <meta name="description" content="A Wordle-like where you need to guess the Luck Be a Landlord symbol.">
@@ -11,128 +11,23 @@
         <meta name="author" content="MonstyrSlayr">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <meta property="og:url" content="https://monstyrslayr.github.io/lbaldle/daily.html"/>
+        <meta property="og:url" content="https://monstyrslayr.github.io/lbaldle/daily"/>
         <meta property="og:type" content="game"/>
         <meta property="og:title" content="LBaLdle - Daily"/>
         <meta property="og:description" content="A Wordle-like where you need to guess the Luck Be a Landlord symbol."/>
         <meta property="og:image" content="https://raw.githubusercontent.com/MonstyrSlayr/monstyrslayr.github.io/main/img/LBALDLEDAILY.png"/>
         <meta property="og:locale" content="en_US"/>
 
-        <meta property="twitter:url" content="https://monstyrslayr.github.io/lbaldle/daily.html">
+        <meta property="twitter:url" content="https://monstyrslayr.github.io/lbaldle/daily">
         <meta property="twitter:title" content="LBaLdle - Daily">
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:description" content="A Wordle-like where you need to guess the Luck Be a Landlord symbol."/>
         <meta property="twitter:image" content="https://raw.githubusercontent.com/MonstyrSlayr/monstyrslayr.github.io/main/img/LBALDLEDAILY.png"/>
 
         <title>LBaLdle - Daily</title>
+        <meta http-equiv="refresh" content="0; url=https://monstyrslayr.github.io/lbaldle/daily"/>
     </head>
     <body>
-        <h2>LBaLdle - Daily</h2>
-        <p>
-            Put your Luck Be a Landlord knowledge to the test. Guess the daily symbol and keep your streak going!
-        </p>
-
-        <h3>Streak: <span id="streakNum"></span></h3>
-
-        <div id="mainGame">
-            <div class="guesses">
-                <div class="row" id="hinttitles">
-                    <div class='column'>
-                        <p class="hint" id="symbolRow">Symbol</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="rarityRow">Rarity</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="coinRow">Coin Payout</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="countRow">Symbols in Description</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="appRow">Appearances in Symbol Descriptions</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="itemAppRow">Appearances in Item Descriptions</p>
-                    </div>
-
-                    <div class='column'>
-                        <p class="hint" id="percRow"><a href="https://steamcommunity.com/stats/1404850/achievements" target="_blank">Steam Achievement Percentage</a></p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="guesses" class="guesses">
-
-            </div>
-        <br>
-
-        <p id="dupDetected">You got all checks, but the incorrect symbol.</p>
-
-        <form id="guessform" autocomplete="off" onsubmit="return false;">
-            <div class="autocomplete">
-                <input class="guess_input" id="guess" type="text" name="guess" placeholder="Guess a symbol">
-            </div>
-
-            <input id="guess_submit" class="guess_input" type="submit" value="Submit"><br>
-            <div id="guessPreview"></div><br>
-
-            <!-- <a class="type-block hintbtn" id="toggleinfo" href="#" title="Show Symbol info in autocomplete entries">Symbol Data ON</a> -->
-            <p>I encourage you not to use the <a href="./symbols.html" target="_blank">Symbol Dictionary</a> for the Daily <img id="lilHooligan" src="./img/hooligan.png"></p>
-            <p>Finished with the Daily? <a href="./">Go back to endless mode.</a></p>
-        </form>
-
-        <div id="results" style="display: none;">
-            <span id="won" style="display: none;">You won!</span>
-            <span id="lost" style="display: none;">You lost</span>
-            <span>The symbol was <span id="secretSymbol"></span></span><br>
-            <p id="finishEmojisDiv"></p>
-            <input type="submit" id="playAgainButton" class="guess_input" value="Play Again"  style="display:none;">
-        </div>
-
-        <div id="extra">
-            <p>Have an issue to report or a suggestion for the game?
-            <br>DM monstyrslayr on Discord.
-            <br>Luck Be a Landlord and all assets belong to TrampolineTales.
-            <br><a href="https://github.com/MonstyrSlayr/lbaldle" target="_blank">Source Code</a></p>
-        </div>
-    </div>
-
-    <div id="notMain">
-        <div id="emailToggleDiv">
-            <div id="emailToggleDivReal">
-                <button id="emailToggle" class="emailToggle"><img id="emailCheck" class="emailCheck" src="./img/dud.png"></button>
-                <label class="buttonLabel">Show Emails<label id="emailToggleLabel"> (New Email)</label></label>
-            </div>
-            <div>
-                <button class="emailToggle"><img id="darkModeToggle" class="emailCheck" src="./img/sun.png"></button>
-                <label class="buttonLabel">Toggle Dark Mode</label>
-            </div>
-            <div>
-                <button class="emailToggle"><img id="infoCheck" class="emailCheck" src="./img/dud.png"></button>
-                <label class="buttonLabel">Show Symbol Info on Hover</label>
-            </div>
-            <div>
-                <button class="emailToggle"><img id="groupCheck" class="emailCheck" src="./img/dud.png"></button>
-                <label class="buttonLabel">Toggle Searching Symbol Groups</label>
-            </div>
-        </div>
-        <div id="emails">
-            <p id="noEmails">No emails to display.<br>Click to close.</p>
-        </div>
-    </div>
-
-    <div id="symbolInfo">
-    </div>
-
-    <script src="symbols.js"></script>
-    <script src="updates.js" type="module"></script>
-    <script src="game.js" type="module"></script>
-    
+        <p><a href="https://monstyrslayr.github.io/lbaldle/daily">Redirect</a></p>
     </body>
 </html>
